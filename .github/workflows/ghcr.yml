@@ -1,0 +1,29 @@
+name: "Build and Push to GHCR"
+on:
+  pull_request:
+    branches: [ghcr]
+    types:
+      - closed
+
+env:
+  working-directroy: ./
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+        
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 'Build Inventory Image'
+        run: |
+            docker build . --tag ghcr.io/AelElliotBanyard/store:latest
+            docker push ghcr.io/AelElliotBanyard/store:latest
