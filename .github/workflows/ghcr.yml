@@ -1,16 +1,14 @@
 name: "Build and Push to GHCR"
 on:
-  pull_request:
-    branches: [ghcr]
-    types:
-      - closed
+  push:
+    branches:
+      - ghcr
 
 env:
   working-directroy: ./
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
+  GHCR:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
