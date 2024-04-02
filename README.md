@@ -109,3 +109,6 @@ Das Dockerfile ist das gleiche wie in der Aufgabe 1.
 
 GitHub Action Run:
 ![Github Action Run](image-1.png)
+
+Weitere Aufgaben:
+Ich wollte die ECS und ECR aufgaben Erledigen jedoch hatte ich keinen zugriff auf das Learner Lab
