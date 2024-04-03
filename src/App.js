@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import David from './David.png';
 
 function App() {
   return (
