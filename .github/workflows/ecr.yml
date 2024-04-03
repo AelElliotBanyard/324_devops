@@ -6,8 +6,8 @@ on:
       - ecr
 
 env:
-  AWS_REGION: MY_AWS_REGION
-  ECR_REPOSITORY: MY_ECR_REPOSITORY
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: m324devopsbanyard
 
 jobs:
   deploy:
