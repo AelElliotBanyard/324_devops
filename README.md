@@ -110,5 +110,63 @@ Das Dockerfile ist das gleiche wie in der Aufgabe 1.
 GitHub Action Run:
 ![Github Action Run](image-1.png)
 
+## Aufgabe ECR
+
+1. Befehl in der AWS CLI um ein ECR Repository zu erstellen:
+
+```bash
+aws ecr create-repository \
+    --repository-name m324devopsbanyard \
+    --region us-east-1
+
+```
+
+2. AWS Access Key, Secret Key und Session Token als Secrets in GitHub hinterlegen
+3. Workflow erstellen, welcher das Dockerfile auf das ECR Repository pusht
+
+```yaml
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - ecr
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: m324devopsbanyard
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+```
+
 Weitere Aufgaben:
 Ich wollte die ECS und ECR aufgaben Erledigen jedoch hatte ich keinen zugriff auf das Learner Lab
